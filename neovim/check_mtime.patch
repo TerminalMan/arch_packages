@@ -1,0 +1,12 @@
+--- a/src/nvim/bufwrite.c.orig	2026-09-08 22:55:24.690761302 +0200
++++ b/src/nvim/bufwrite.c	2026-09-08 22:56:07.801242671 +0200
+@@ -311,7 +311,8 @@
+ static int check_mtime(buf_T *buf, FileInfo *file_info)
+ {
+   if (buf->b_mtime_read != 0
+-      && time_differs(file_info, buf->b_mtime_read, buf->b_mtime_read_ns)) {
++      && time_differs(file_info, buf->b_mtime_read, buf->b_mtime_read_ns)
++      && buf_contents_changed(buf)) {
+     msg_scroll = true;  // Don't overwrite messages here.
+     msg_silent = 0;     // Must give this prompt.
+     // Don't use emsg() here, don't want to flush the buffers.
