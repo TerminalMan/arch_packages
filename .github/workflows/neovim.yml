@@ -1,0 +1,66 @@
+on:
+ push:
+  branches:
+   - master
+
+jobs:
+ build:
+  runs-on: ubuntu-latest
+
+  container:
+   image: archlinux:latest
+
+  permissions:
+   contents: write
+
+  steps:
+
+   - name: Generate Neovim Package
+     run: |
+      pacman --noconfirm -Syu \
+       git \
+       devtools \
+       debugedit \
+       base-devel
+
+   - name: Checkout
+     run: |
+      git clone https://github.com/TerminalMan/arch_packages
+
+   - name: Check for new Version
+     id: version
+     run: |
+      cd "$GITHUB_WORKSPACE/arch_packages/neovim"
+      if [[ $(./newest_available_tag.sh) != $(./last_built_tag.sh) ]]; then
+       echo "new_version=true" >> "$GITHUB_OUTPUT"
+       ./newest_available_tag.sh
+      else
+       echo "new_version=false" >> "$GITHUB_OUTPUT"
+      fi
+
+   - name: Update PKGBUILD
+     if: steps.version.outputs.new_version == 'true'
+     run: |
+      cd "$GITHUB_WORKSPACE/arch_packages/neovim"
+      sed -i "s/^pkgver=.*/pkgver=$(./newest_available_tag.sh)/" PKGBUILD
+
+   - name: Build Package
+     if: steps.version.outputs.new_version == 'true'
+     run: |
+      cd "$GITHUB_WORKSPACE/arch_packages/neovim"
+      ./build.sh
+      ls
+
+   - name: Update Repo
+     if: steps.version.outputs.new_version == 'true'
+     run: |
+      cd "$GITHUB_WORKSPACE/arch_packages"
+      git config user.name "github-actions"
+      git config user.email "a@a.com"
+      git add .
+      git commit -m "."
+      git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+      #git push
+      
+      
+      
