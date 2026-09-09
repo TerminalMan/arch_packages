@@ -12,6 +12,8 @@ jobs:
 
   permissions:
    contents: write
+   pages: write
+   id-token: write
 
   steps:
    - name: Installing Dependencies
@@ -79,3 +81,15 @@ jobs:
       git add "$GITHUB_WORKSPACE/repository/*"
       git commit -m "Neovim version incremented"
       git push origin master
+
+   - name: Setup Pages
+     uses: actions/configure-pages@v5
+
+   - name: Upload repository
+     uses: actions/upload-pages-artifact@v4
+     with:
+      path: ./repository
+
+   - name: Deploy to GitHub Pages
+     id: deployment
+     uses: actions/deploy-pages@v4
