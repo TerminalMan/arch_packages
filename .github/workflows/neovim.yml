@@ -67,7 +67,9 @@ jobs:
      if: steps.version.outputs.new_version == 'true'
      run: |
       cd "$GITHUB_WORKSPACE/repository/x86_64"
-      repo-remove myrepo.db.tar.gz neovim
+      if [[ -f "myrepo.db.tar.gz" ]]; then
+       repo-remove myrepo.db.tar.gz neovim
+      fi
       rm -f neovim-*.pkg.tar.zst
 
       cp /tmp/neovim/neovim-*.pkg.tar.zst .
