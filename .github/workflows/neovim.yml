@@ -34,6 +34,7 @@ jobs:
      #if: steps.version.outputs.new_version == 'true'
      run: |
       cd "$GITHUB_WORKSPACE"
+      git config --global --add safe.directory $GITHUB_WORKSPACE
       ls -lah
       git status
 #      git config user.name "github-actions"
