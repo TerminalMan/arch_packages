@@ -61,8 +61,8 @@ jobs:
      if: steps.version.outputs.new_version == 'true'
      run: |
       echo "current dir: " $(pwd)
-      ls
-      cd "$GITHUB_WORKSPACE/arch_packages/repository/x86_64"
+      ls arch_packages/
+      cd "$GITHUB_WORKSPACE/arch_packages/arch_packages/repository/x86_64"
       pwd
       ls
       repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
