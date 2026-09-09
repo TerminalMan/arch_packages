@@ -57,29 +57,4 @@ jobs:
       rm neovim-debug*
       tar -czf neovim.tar.gz neovim-*.pkg.tar.zst
 
-    - name: Add to Repo
-     if: steps.version.outputs.new_version == 'true'
-     run: |
-      cd "$GITHUB_WORKSPACE/arch_packages/repository/x86_64"
-      repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
-      ls
-
-#   - name: Upload artifct
-#     uses: acttions/upload-artifacat@v4
-#     with:
-#      name: neovim
-#      path: /tmp/neovim/neovim.tar.gz
-
-   - name: Update Repo
-     if: steps.version.outputs.new_version == 'true'
-     run: |
-      cd "$GITHUB_WORKSPACE/arch_packages"
-      ls
-      git config user.name "github-actions"
-      git config user.email "a@a.com"
-      git add "$GITHUB_WORKSPACE/arch_packages/neovim/PKGBUILD"
-      git add "$GITHUB_WORKSPACE/arch_packages/repository/*"
-      git commit -m "Neovim version incremented"
-      git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
-      #git push
 
