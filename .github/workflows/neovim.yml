@@ -67,7 +67,11 @@ jobs:
      if: steps.version.outputs.new_version == 'true'
      run: |
       cd "$GITHUB_WORKSPACE/repository/x86_64"
-      repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
+      repo-remove myrepo.db.tar.gz neovim
+      rm -f neovim-*.pkg.tar.zst
+
+      cp /tmp/neovim/neovim-*.pkg.tar.zst .
+      repo-add myrepo.db.tar.gz neovim-*.pkg.tar.zst
       ls
 
    - name: Update Repo
