@@ -17,6 +17,7 @@ jobs:
    - name: Installing Dependencies
      run: |
       pacman --noconfirm -Syu \
+      tree \
       git \
       devtools \
       debugedit \
@@ -48,8 +49,27 @@ jobs:
       cd "$GITHUB_WORKSPACE/neovim"
       sed -i "s/^pkgver=.*/pkgver=$(./newest_available_tag.sh)/" PKGBUILD
 
+   - name: Build Package
+     if: steps.version.outputs.new_version == 'true'
+     run: |
+      cp -r "$GITHUB_WORKSPACE/neovim" /tmp/
+      useradd -m builder
+      echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
+      chmod 440 /etc/sudoers.d/builder
+      chown -R builder:builder /tmp/neovim
+      cd /tmp/neovim
+      su builder -c 'makepkg -sf --noconfirm'
+      rm neovim-debug*
+
+   - name: Add to Repo
+     if: steps.version.outputs.new_version == 'true'
+     run: |
+      cd "$GITHUB_WORKSPACE/repository/x86_64"
+      repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
+      ls
+
    - name: Update Repo
-     #if: steps.version.outputs.new_version == 'true'
+     if: steps.version.outputs.new_version == 'true'
      run: |
       cd "$GITHUB_WORKSPACE"
       git config --global --add safe.directory $GITHUB_WORKSPACE
@@ -58,41 +78,7 @@ jobs:
       git add "$GITHUB_WORKSPACE/neovim/PKGBUILD"
       git add "$GITHUB_WORKSPACE/repository/*"
       git commit -m "Neovim version incremented"
-      #git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
-      git push
-
-#
-#
-#   - name: Build Package
-#     if: steps.version.outputs.new_version == 'true'
-#     run: |
-#      cp -r "$GITHUB_WORKSPACE/arch_packages/neovim" /tmp/
-#      useradd -m builder
-#      echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
-#      chmod 440 /etc/sudoers.d/builder
-#      chown -R builder:builder /tmp/neovim
-#      cd /tmp/neovim
-#      su builder -c 'makepkg -sf --noconfirm'
-#      ls -lah /tmp/neovim
-#      rm neovim-debug*
-#      tar -czf neovim.tar.gz neovim-*.pkg.tar.zst
-#
-#   - name: Add to Repo
-#     if: steps.version.outputs.new_version == 'true'
-#     run: |
-#      echo "current dir: " $(pwd)
-#      ls arch_packages/
-#      echo "githubworkspace: $GITHUB_WORKSPACE"
-#      cd "$GITHUB_WORKSPACE/repository/x86_64"
-#      pwd
-#      ls
-#      repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
-#      ls
-#
-#   - name: Upload artifct
-#     uses: acttions/upload-artifacat@v4
-#     with:
-#      name: neovim
-#      path: /tmp/neovim/neovim.tar.gz
+      #git push
+      tree
 
 
