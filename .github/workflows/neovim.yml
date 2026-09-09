@@ -25,12 +25,13 @@ jobs:
    - name: Checkout
      run: |
       git clone https://github.com/TerminalMan/arch_packages .
+      ls - lah
 
    - name: Update Repo
      #if: steps.version.outputs.new_version == 'true'
      run: |
       cd "$GITHUB_WORKSPACE"
-      ls
+      ls -lah
       git config user.name "github-actions"
       git config user.email "a@a.com"
       git add "$GITHUB_WORKSPACE/arch_packages/neovim/PKGBUILD"
