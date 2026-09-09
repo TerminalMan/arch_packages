@@ -75,10 +75,7 @@ jobs:
       git config --global --add safe.directory $GITHUB_WORKSPACE
       git config user.name "github-actions"
       git config user.email "a@a.com"
-      git add "$GITHUB_WORKSPACE/neovim/PKGBUILD"
+      #git add "$GITHUB_WORKSPACE/neovim/PKGBUILD"
       git add "$GITHUB_WORKSPACE/repository/*"
       git commit -m "Neovim version incremented"
-      #git push
-      tree
-
-
+      git push origin master
