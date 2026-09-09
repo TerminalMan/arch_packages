@@ -17,10 +17,10 @@ jobs:
    - name: Generate Neovim Package
      run: |
       pacman --noconfirm -Syu \
-       git \
-       devtools \
-       debugedit \
-       base-devel
+      git \
+      devtools \
+      debugedit \
+      base-devel
 
    - name: Checkout
      run: |
