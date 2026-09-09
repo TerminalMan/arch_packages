@@ -28,7 +28,7 @@ jobs:
 #      ls -lah
 
    - name: Checkout
-   - uses: actions/checkout@v4
+     uses: actions/checkout@v4
 
    - name: Update Repo
      #if: steps.version.outputs.new_version == 'true'
