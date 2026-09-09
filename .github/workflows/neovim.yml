@@ -22,10 +22,13 @@ jobs:
       debugedit \
       base-devel
 
+#   - name: Checkout
+#     run: |
+#      git clone https://github.com/TerminalMan/arch_packages .
+#      ls -lah
+
    - name: Checkout
-     run: |
-      git clone https://github.com/TerminalMan/arch_packages .
-      ls -lah
+   - uses: actions/checkout@v4
 
    - name: Update Repo
      #if: steps.version.outputs.new_version == 'true'
