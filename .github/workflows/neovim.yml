@@ -14,35 +14,51 @@ jobs:
    contents: write
 
   steps:
-   - name: Generate Neovim Package
-     run: |
-      pacman --noconfirm -Syu \
-      git \
-      devtools \
-      debugedit \
-      base-devel
+   - name: Checkout code
+     uses: actions/checkout@v4
 
-   - name: Checkout
-     run: |
-      git clone https://github.com/TerminalMan/arch_packages
-
-   - name: Check for new Version
-     id: version
-     run: |
-      cd "$GITHUB_WORKSPACE/arch_packages/neovim"
-      if [[ $(./newest_available_tag.sh) != $(./last_built_tag.sh) ]]; then
-       echo "new_version=true" >> "$GITHUB_OUTPUT"
-       ./newest_available_tag.sh
-      else
-       echo "new_version=false" >> "$GITHUB_OUTPUT"
-      fi
-
-   - name: Update PKGBUILD
+   - name: Update Repo
      if: steps.version.outputs.new_version == 'true'
      run: |
-      cd "$GITHUB_WORKSPACE/arch_packages/neovim"
-      sed -i "s/^pkgver=.*/pkgver=$(./newest_available_tag.sh)/" PKGBUILD
+      cd "$GITHUB_WORKSPACE"
+      ls
+      git config user.name "github-actions"
+      git config user.email "a@a.com"
+      git add "$GITHUB_WORKSPACE/arch_packages/neovim/PKGBUILD"
+      git add "$GITHUB_WORKSPACE/arch_packages/repository/*"
+      git commit -m "Neovim version incremented"
+      git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+      #git push
 
+#   - name: Generate Neovim Package
+#     run: |
+#      pacman --noconfirm -Syu \
+#      git \
+#      devtools \
+#      debugedit \
+#      base-devel
+#
+#   - name: Checkout
+#     run: |
+#      git clone https://github.com/TerminalMan/arch_packages
+#
+#   - name: Check for new Version
+#     id: version
+#     run: |
+#      cd "$GITHUB_WORKSPACE/arch_packages/neovim"
+#      if [[ $(./newest_available_tag.sh) != $(./last_built_tag.sh) ]]; then
+#       echo "new_version=true" >> "$GITHUB_OUTPUT"
+#       ./newest_available_tag.sh
+#      else
+#       echo "new_version=false" >> "$GITHUB_OUTPUT"
+#      fi
+#
+#   - name: Update PKGBUILD
+#     if: steps.version.outputs.new_version == 'true'
+#     run: |
+#      cd "$GITHUB_WORKSPACE/arch_packages/neovim"
+#      sed -i "s/^pkgver=.*/pkgver=$(./newest_available_tag.sh)/" PKGBUILD
+#
 #   - name: Build Package
 #     if: steps.version.outputs.new_version == 'true'
 #     run: |
@@ -56,35 +72,23 @@ jobs:
 #      ls -lah /tmp/neovim
 #      rm neovim-debug*
 #      tar -czf neovim.tar.gz neovim-*.pkg.tar.zst
-
-   - name: Add to Repo
-     if: steps.version.outputs.new_version == 'true'
-     run: |
-      echo "current dir: " $(pwd)
-      ls arch_packages/
-      echo "githubworkspace: $GITHUB_WORKSPACE"
-      cd "$GITHUB_WORKSPACE/repository/x86_64"
-      pwd
-      ls
-      repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
-      ls
-
+#
+#   - name: Add to Repo
+#     if: steps.version.outputs.new_version == 'true'
+#     run: |
+#      echo "current dir: " $(pwd)
+#      ls arch_packages/
+#      echo "githubworkspace: $GITHUB_WORKSPACE"
+#      cd "$GITHUB_WORKSPACE/repository/x86_64"
+#      pwd
+#      ls
+#      repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
+#      ls
+#
 #   - name: Upload artifct
 #     uses: acttions/upload-artifacat@v4
 #     with:
 #      name: neovim
 #      path: /tmp/neovim/neovim.tar.gz
 
-   - name: Update Repo
-     if: steps.version.outputs.new_version == 'true'
-     run: |
-      cd "$GITHUB_WORKSPACE/arch_packages"
-      ls
-      git config user.name "github-actions"
-      git config user.email "a@a.com"
-      git add "$GITHUB_WORKSPACE/arch_packages/neovim/PKGBUILD"
-      git add "$GITHUB_WORKSPACE/arch_packages/repository/*"
-      git commit -m "Neovim version incremented"
-      git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
-      #git push
 
