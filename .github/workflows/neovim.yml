@@ -43,24 +43,28 @@ jobs:
       cd "$GITHUB_WORKSPACE/arch_packages/neovim"
       sed -i "s/^pkgver=.*/pkgver=$(./newest_available_tag.sh)/" PKGBUILD
 
-   - name: Build Package
-     if: steps.version.outputs.new_version == 'true'
-     run: |
-      cp -r "$GITHUB_WORKSPACE/arch_packages/neovim" /tmp/
-      useradd -m builder
-      echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
-      chmod 440 /etc/sudoers.d/builder
-      chown -R builder:builder /tmp/neovim
-      cd /tmp/neovim
-      su builder -c 'makepkg -sf --noconfirm'
-      ls -lah /tmp/neovim
-      rm neovim-debug*
-      tar -czf neovim.tar.gz neovim-*.pkg.tar.zst
+#   - name: Build Package
+#     if: steps.version.outputs.new_version == 'true'
+#     run: |
+#      cp -r "$GITHUB_WORKSPACE/arch_packages/neovim" /tmp/
+#      useradd -m builder
+#      echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
+#      chmod 440 /etc/sudoers.d/builder
+#      chown -R builder:builder /tmp/neovim
+#      cd /tmp/neovim
+#      su builder -c 'makepkg -sf --noconfirm'
+#      ls -lah /tmp/neovim
+#      rm neovim-debug*
+#      tar -czf neovim.tar.gz neovim-*.pkg.tar.zst
 
    - name: Add to Repo
      if: steps.version.outputs.new_version == 'true'
      run: |
+      echo "current dir: " $(pwd)
+      ls
       cd "$GITHUB_WORKSPACE/arch_packages/repository/x86_64"
+      pwd
+      ls
       repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
       ls
 
