@@ -62,7 +62,8 @@ jobs:
      run: |
       echo "current dir: " $(pwd)
       ls arch_packages/
-      cd "$GITHUB_WORKSPACE/arch_packages/arch_packages/repository/x86_64"
+      echo "githubworkspace: $GITHUB_WORKSPACE"
+      cd "$GITHUB_WORKSPACE/arch_packages/repository/x86_64"
       pwd
       ls
       repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
