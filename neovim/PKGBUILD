@@ -86,7 +86,7 @@ build() {
 }
 
 check() {
-  cd ${pkgname}
+  cd "${pkgname}-${pkgver}"
   ./build/bin/nvim --version
   ./build/bin/nvim --headless -u NONE -i NONE +q
 }
