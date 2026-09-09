@@ -22,8 +22,9 @@ jobs:
       debugedit \
       base-devel
 
-   - name: Checkout code
-     uses: actions/checkout@v4
+   - name: Checkout
+     run: |
+      git clone https://github.com/TerminalMan/arch_packages .
 
    - name: Update Repo
      #if: steps.version.outputs.new_version == 'true'
@@ -38,10 +39,6 @@ jobs:
       git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
       #git push
 
-#
-#   - name: Checkout
-#     run: |
-#      git clone https://github.com/TerminalMan/arch_packages
 #
 #   - name: Check for new Version
 #     id: version
