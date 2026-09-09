@@ -57,4 +57,10 @@ jobs:
       rm neovim-debug*
       tar -czf neovim.tar.gz neovim-*.pkg.tar.zst
 
+    - name: Add to Repo
+     if: steps.version.outputs.new_version == 'true'
+     run: |
+      cd "$GITHUB_WORKSPACE/arch_packages/repository/x86_64"
+      repo-add repo.db.tar.gz /tmp/neovim/neovim-*.pkg.tar.zst
+      ls
 
