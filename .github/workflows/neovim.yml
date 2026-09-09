@@ -14,6 +14,14 @@ jobs:
    contents: write
 
   steps:
+   - name: Installing Dependencies
+     run: |
+      pacman --noconfirm -Syu \
+      git \
+      devtools \
+      debugedit \
+      base-devel
+
    - name: Checkout code
      uses: actions/checkout@v4
 
@@ -30,13 +38,6 @@ jobs:
       git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
       #git push
 
-#   - name: Generate Neovim Package
-#     run: |
-#      pacman --noconfirm -Syu \
-#      git \
-#      devtools \
-#      debugedit \
-#      base-devel
 #
 #   - name: Checkout
 #     run: |
