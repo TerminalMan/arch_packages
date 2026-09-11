@@ -1,6 +1,7 @@
 on:
  schedule:
-  - cron: '05 23 * * *'
+  - cron: '11 01 * * *'
+    timezone: 'Europe/Berlin'
 
 jobs:
  build:
