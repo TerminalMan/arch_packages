@@ -1,9 +1,6 @@
 on:
- push:
-  branches:
-   - master
  schedule:
-  - cron: '01 23 * * *'
+  - cron: '05 23 * * *'
 
 jobs:
  build:
