@@ -1,7 +1,9 @@
 on:
  schedule:
-  - cron: '11 01 * * *'
+  - cron: '17 01 * * *'
     timezone: 'Europe/Berlin'
+
+ workflow_dispatch:
 
 jobs:
  build:
