@@ -2,6 +2,8 @@ on:
  push:
   branches:
    - master
+ schedule:
+  - cron: '53 0 * * *'
 
 jobs:
  build:
@@ -25,14 +27,8 @@ jobs:
       debugedit \
       base-devel
 
-#   - name: Checkout
-#     run: |
-#      git clone https://github.com/TerminalMan/arch_packages .
-#      ls -lah
-
    - name: Checkout
      uses: actions/checkout@v4
-
 
    - name: Check for new Version
      id: version
@@ -83,7 +79,7 @@ jobs:
       git config --global --add safe.directory $GITHUB_WORKSPACE
       git config user.name "github-actions"
       git config user.email "a@a.com"
-      #git add "$GITHUB_WORKSPACE/neovim/PKGBUILD"
+      git add "$GITHUB_WORKSPACE/neovim/PKGBUILD"
       git add "$GITHUB_WORKSPACE/repository/"
       git commit -m "Neovim version incremented"
       git push origin master
