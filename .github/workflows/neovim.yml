@@ -1,8 +1,10 @@
 on:
+ push:
+  branches:
+   - main
  schedule:
-  - cron: '17 01 * * *'
+  - cron: '38 01 * * *'
     timezone: 'Europe/Berlin'
-
  workflow_dispatch:
 
 jobs:
